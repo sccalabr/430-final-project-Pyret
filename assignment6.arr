@@ -67,7 +67,7 @@ fun interp(e :: ExprC, env :: List) -> Value:
       end
     | binop(s, l, r) => numV(1)
     | appC(f, a)=> numV(1)
-    | lamC(a, b)=> numV(1)
+    | lamC(a, b)=> closV(a, b, env)
 
   end
 where:
