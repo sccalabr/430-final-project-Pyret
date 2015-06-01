@@ -56,13 +56,13 @@ end
 fun num-pl(l :: Value, r :: Value) -> Value:
   cases (Value) l:
     | numV(n) => numV(l.n + r.n)
-    | boolV(b) => "invalid input"
-    | cloV(args, body, env) => "invalid input"
+    | boolV(b) => raise "invalid input"
+    | cloV(args, body, env) => raise "invalid input"
   end  
   
 where:
   num-pl(numV(12), numV(2)) is numV(14)
-  num-pl(boolV(true), numV(4)) is "invalid input"
+  num-pl(boolV(true), numV(4)) is raised "invalid input"
 end
 
 
