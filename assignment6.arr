@@ -136,18 +136,28 @@ fun extendEnviornment(newBinds :: List, env :: List) -> List:
     | link(f, r) => 
       link(f, extendEnviornment(r, env))
   end
+  
+where:
+  extendEnviornment([list: bind("x", numV(1)), bind("y", numV(2))], 
+    [list: bind("z", numV(3))])  
+    is [list: bind("x", numV(1)), bind("y", numV(2)), bind("z", numV(3))]  
+  
+  
 end
 
-fun evalArguments(args :: List, env :: List) -> List:
+fun evalArguments(param :: List, args :: List, env :: List) -> List:
   cases (List) args:
     | empty => [list: ]
-    | link(f, r) =>
-      link(interp(f, env), evalArguments(r, env))
+    | link(f1, r1) =>
+      cases (List) param:
+        | link(f2, r2) =>
+            link(bind(f2, interp(f1, env)), evalArguments(r2, r1, env))
+      end
   end
 
 where:
-  evalArguments([list: numC(1), numC(2)], [list: ]) is
-  [list: numV(1), numV(2)]  
+  evalArguments([list: "x", "y"], [list: numC(1), numC(2)], [list: ]) is
+  [list: bind("x", numV(1)), bind("y", numV(2))]  
 end
 
 
@@ -174,9 +184,10 @@ fun interp(e :: ExprC, env :: List) -> Value:
       else:
         raise("invalid input")
       end
-    | appC(f, a)=> 
+    | appC(f, args)=> 
       cases (Value) interp( f, env):
-        | closV(param, body, cloEnv) => numV(1)
+        | closV(param, body, cloEnv) => 
+          interp(body, extendEnviornment(evalArguments(param, args, env), env))
         | else => raise("funDef not eval to closure")
       end  
     | lamC(a, b)=> closV(a, b, env)
@@ -197,9 +208,10 @@ where:
   interp(binopC("*", numC(-12), numC(6)), [list: bind("a", numV(1)), bind("b", numV(2))]) is numV(-72)
   interp(binopC("/", numC(30), numC(6)), [list: ]) is numV(5)
   interp(binopC("/", numC(-12), numC(6)), [list: bind("a", numV(1)), bind("b", numV(2))]) is numV(-2)
-
-end
-
+  
+  interp(appC(lamC([list: "x", "y"], binopC("+", idC("x"), idC("y"))), [list: numC(5), numC(10)]), [list: ])
+  
+end  
 
 fun parse(s :: S.S-Exp) -> ExprC:
   cases (S.S-Exp) s:
