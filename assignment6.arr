@@ -51,3 +51,17 @@ check-binop("+") is true
 check-binop("ere") is false
 check-binop("*") is true
 end
+
+
+
+fun interp(e :: ExprC, env :: Binding) -> Value:
+  cases (ExprC) e:
+    | numC(n) => numV(1)
+    | idC(s) => numV(1)
+    | bool(b) => numV(1)
+    | binop(s, l, r) => numV(1)
+    | appC(f, a)=> numV(1)
+    | lamC(a, b)=> numV(1)
+
+  end
+end
