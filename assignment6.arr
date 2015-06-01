@@ -1,7 +1,7 @@
 data ExprC:
   | numC(n :: Number)
   | idC(s :: String)
-  | bool(b :: Boolean)
+  | boolC(b :: Boolean)
   | appC(func :: ExprC, args :: List )
   | ifC(test :: ExprC, iff :: ExprC, then :: ExprC)
   | binopC(sym :: String, l :: ExprC, r :: ExprC)
@@ -58,7 +58,7 @@ fun interp(e :: ExprC, env :: List) -> Value:
   cases (ExprC) e:
     | numC(n) => numV(1)
     | idC(s) => variableLookup(s, env) 
-    | booleanC(b) => booleanV(b)
+    | boolC(b) => boolV(b)
     | binop(s, l, r) => numV(1)
     | appC(f, a)=> numV(1)
     | lamC(a, b)=> numV(1)
@@ -66,7 +66,7 @@ fun interp(e :: ExprC, env :: List) -> Value:
   end
 where:
   interp(numC(1), [list: ]) is numV(1)
-  interp(booleanC(true), [list: ]) is booleanV(true)
+  interp(boolC(true), [list: ]) is boolV(true)
   interp(idC("x"), [list: bind("x", numV(1)), bind("y", numV(2))]) is numV(1)
   interp(numC(2), [list: bind("x", numV(1)), bind("y", numV(2))]) is numV(1)
 end
