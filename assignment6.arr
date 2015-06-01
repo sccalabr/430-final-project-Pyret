@@ -53,6 +53,18 @@ where:
   check-binop("*") is true
 end
 
+fun num-pl(l :: Value, r :: Value) -> Value:
+  cases (Value) l:
+    | numV(n) => numV(l.n + r.n)
+    | boolV(b) => "invalid input"
+    | cloV(args, body, env) => "invalid input"
+  end  
+  
+where:
+  num-pl(numV(12), numV(2)) is numV(14)
+  num-pl(boolV(true), numV(4)) is "invalid input"
+end
+
 
 fun interp(e :: ExprC, env :: List) -> Value:
   cases (ExprC) e:
