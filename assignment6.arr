@@ -54,7 +54,7 @@ end
 
 
 
-fun interp(e :: ExprC, env :: Binding) -> Value:
+fun interp(e :: ExprC, env :: List) -> Value:
   cases (ExprC) e:
     | numC(n) => numV(1)
     | idC(s) => numV(1)
@@ -62,6 +62,7 @@ fun interp(e :: ExprC, env :: Binding) -> Value:
     | binop(s, l, r) => numV(1)
     | appC(f, a)=> numV(1)
     | lamC(a, b)=> numV(1)
-
   end
+where:
+  interp(numC(2), [list: bind("x", numV(1)), bind("y", numV(2))]) is numV(1)
 end
