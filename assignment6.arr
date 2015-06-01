@@ -129,6 +129,31 @@ where:
   num-di(numV(4), boolV(true)) raises("invalid input")
 end
 
+
+fun extendEnviornment(newBinds :: List, env :: List) -> List:
+  cases (List) newBinds:
+    | empty => env
+    | link(f, r) => 
+      link(f, extendEnviornment(r, env))
+  end
+
+  
+end
+
+fun evalArguments(args :: List, env :: List) -> List:
+  cases (List) args:
+    | empty => [list: ]
+    | link(f, r) =>
+      link(interp(f, env), evalArguments(r, env))
+  end
+
+where:
+  evalArguments([list: numC(1), numC(2)], [list: ]) is
+  [list: numV(1), numV(2)]
+  
+end
+
+
 fun interp(e :: ExprC, env :: List) -> Value:
   cases (ExprC) e:
     | numC(n) => numV(n)
@@ -143,18 +168,17 @@ fun interp(e :: ExprC, env :: List) -> Value:
     | binopC(s, l, r) =>
       if (s == "+"):
         num-pl(interp(l, env), interp(r, env))
-      else if (s == "-"):
-        num-mi(interp(l, env), interp(r, env))
-      else if (s == "*"):
-        num-mu(interp(l, env), interp(r, env))
-      else if (s == "/"):
-        num-di(interp(l, env), interp(r, env))  
       else:
         raise("invalid input")
       end
-    | appC(f, a)=> numV(1)
+    | appC(f, a)=> 
+      cases (Value) interp( f, env):
+        | closV(param, body, cloEnv) => numV(1)
+        | else => raise("funDef not eval to closure")
+      end            
     | lamC(a, b)=> closV(a, b, env)
   end
+  
   
 where:
   interp(numC(1), [list: ]) is numV(1)
