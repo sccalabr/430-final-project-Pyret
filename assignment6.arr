@@ -46,13 +46,12 @@ fun check-binop(symbol :: String) -> Boolean:
   else:
     false
   end
+  
 where:
-check-binop("+") is true
-check-binop("ere") is false
-check-binop("*") is true
+  check-binop("+") is true
+  check-binop("ere") is false
+  check-binop("*") is true
 end
-
-
 
 fun interp(e :: ExprC, env :: List) -> Value:
   cases (ExprC) e:
