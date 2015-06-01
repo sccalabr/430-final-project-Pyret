@@ -36,18 +36,16 @@ where:
 end
 
 fun check-binop(symbol :: String) -> Boolean:
-  if symbol == "+"
-    or symbol == "-"
-    or symbol == "*"
-    or symbol == "/"
-    or symbol == "<="
-    or symbol == "eq":
+  if (symbol == "+")
+    or (symbol == "-")
+    or (symbol == "*")
+    or (symbol == "/")
+    or (symbol == "<=")
+    or (symbol == "eq"):
     true
   else:
     false
   end
-end
-
 where:
 check-binop("+") is true
 check-binop("ere") is false
