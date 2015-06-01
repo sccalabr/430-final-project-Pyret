@@ -199,3 +199,12 @@ where:
   interp(binopC("/", numC(-12), numC(6)), [list: bind("a", numV(1)), bind("b", numV(2))]) is numV(-2)
 
 end
+
+
+fun parse(s :: S.S-Exp) -> ExprC:
+  cases (S.S-Exp) s:
+    | s-num(n) => numC(n)
+    | else =>
+      raise("parse: not number or list")
+  end
+end
