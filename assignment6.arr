@@ -1,7 +1,7 @@
 data ExprC:
   | numC(n :: Number)
   | idC(s :: String)
-  | booleanC(b :: Boolean)
+  | bool(b :: Boolean)
   | appC(func :: ExprC, args :: List )
   | ifC(test :: ExprC, iff :: ExprC, then :: ExprC)
   | binopC(sym :: String, l :: ExprC, r :: ExprC)
@@ -10,7 +10,7 @@ end
 
 data Value:
   | numV(n :: Number)
-  | booleanV(b :: Boolean)
+  | boolV(b :: Boolean)
   | closV(args :: List, body :: ExprC, env :: List)
 end
 
