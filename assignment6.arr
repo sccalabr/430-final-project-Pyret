@@ -75,7 +75,7 @@ where:
   interp(boolC(true), [list: ]) is boolV(true)
   interp(idC("x"), [list: bind("x", numV(1)), bind("y", numV(2))]) is numV(1)
   interp(numC(2), [list: bind("x", numV(1)), bind("y", numV(2))]) is numV(2)
-    interp(ifC(boolC(true), numC(5), numC(6)), [list: bind("x", numV(1)), bind("y", numV(2))]) is numV(5)
+  interp(ifC(boolC(true), numC(5), numC(6)), [list: bind("x", numV(1)), bind("y", numV(2))]) is numV(5)
   interp(ifC(boolC(false), numC(5), numC(6)), [list: bind("x", numV(1)), bind("y", numV(2))]) is numV(6)
 
 end
