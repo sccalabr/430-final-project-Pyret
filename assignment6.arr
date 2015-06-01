@@ -91,23 +91,43 @@ where:
   num-mi(numV(4), boolV(true)) raises("invalid input")
 end
 
-
-fun evalArguments(args :: List, env :: List) -> List:
-  cases (List) args:
-    | empty => [list: ]
-    | link(f, r) =>
-      link(interp(f, env), evalArguments(r, env))
-  end
-
-where:
-  evalArguments([list: numC(1), numC(2)], [list: ]) is
-  [list: numV(1), numV(2)]
+fun num-mu(l :: Value, r :: Value) -> Value:
+  cases (Value) l:
+    | numV(n) => 
+      cases (Value) r:
+        | numV(n2) =>
+          numV(l.n * r.n)
+        | boolV(b) => raise("invalid input")
+        | cloV(args, body, env) => raise("invalid input")
+      end
+    | boolV(b) => raise("invalid input")
+    | cloV(args, body, env) => raise("invalid input")
+  end  
   
+where:
+  num-mu(numV(12), numV(2)) is numV(24)
+  num-mu(boolV(true), numV(4)) raises("invalid input")
+  num-mu(numV(4), boolV(true)) raises("invalid input")
 end
 
-
-
-
+fun num-di(l :: Value, r :: Value) -> Value:
+  cases (Value) l:
+    | numV(n) => 
+      cases (Value) r:
+        | numV(n2) =>
+          numV(l.n / r.n)
+        | boolV(b) => raise("invalid input")
+        | cloV(args, body, env) => raise("invalid input")
+      end
+    | boolV(b) => raise("invalid input")
+    | cloV(args, body, env) => raise("invalid input")
+  end  
+  
+where:
+  num-di(numV(12), numV(2)) is numV(6)
+  num-di(boolV(true), numV(4)) raises("invalid input")
+  num-di(numV(4), boolV(true)) raises("invalid input")
+end
 
 fun interp(e :: ExprC, env :: List) -> Value:
   cases (ExprC) e:
@@ -123,6 +143,12 @@ fun interp(e :: ExprC, env :: List) -> Value:
     | binopC(s, l, r) =>
       if (s == "+"):
         num-pl(interp(l, env), interp(r, env))
+      else if (s == "-"):
+        num-mi(interp(l, env), interp(r, env))
+      else if (s == "*"):
+        num-mu(interp(l, env), interp(r, env))
+      else if (s == "/"):
+        num-di(interp(l, env), interp(r, env))  
       else:
         raise("invalid input")
       end
@@ -139,5 +165,11 @@ where:
   interp(ifC(boolC(false), numC(5), numC(6)), [list: bind("x", numV(1)), bind("y", numV(2))]) is numV(6)
   interp(binopC("+", numC(5), numC(6)), [list: ]) is numV(11)
   interp(binopC("+", numC(-12), numC(6)), [list: bind("a", numV(1)), bind("b", numV(2))]) is numV(-6)
+  interp(binopC("-", numC(5), numC(6)), [list: ]) is numV(-1)
+  interp(binopC("-", numC(-12), numC(6)), [list: bind("a", numV(1)), bind("b", numV(2))]) is numV(-18)
+  interp(binopC("*", numC(5), numC(6)), [list: ]) is numV(30)
+  interp(binopC("*", numC(-12), numC(6)), [list: bind("a", numV(1)), bind("b", numV(2))]) is numV(-72)
+  interp(binopC("/", numC(30), numC(6)), [list: ]) is numV(5)
+  interp(binopC("/", numC(-12), numC(6)), [list: bind("a", numV(1)), bind("b", numV(2))]) is numV(-2)
 
 end
