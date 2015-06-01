@@ -33,5 +33,23 @@ where:
   variableLookup("x", [list: bind("x", numV(1)), bind("y", numV(2))]) is numV(1)
   variableLookup("y", [list: bind("x", numV(1)), bind("y", numV(2))]) is numV(2)
   variableLookup("z", [list: bind("x", numV(1)), bind("y", numV(2))]) raises "enviornment does not contain variable"
+end
 
+fun check-binop(symbol :: String) -> Boolean:
+  if symbol == "+"
+    or symbol == "-"
+    or symbol == "*"
+    or symbol == "/"
+    or symbol == "<="
+    or symbol == "eq":
+    true
+  else:
+    false
+  end
+end
+
+where:
+check-binop("+") is true
+check-binop("ere") is false
+check-binop("*") is true
 end
