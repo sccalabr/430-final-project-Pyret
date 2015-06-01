@@ -56,9 +56,15 @@ end
 
 fun interp(e :: ExprC, env :: List) -> Value:
   cases (ExprC) e:
-    | numC(n) => numV(1)
+    | numC(n) => numV(n)
     | idC(s) => variableLookup(s, env) 
     | boolC(b) => boolV(b)
+    | ifC(test, iff, then) => 
+      if test.b == true:
+        interp(iff, env)
+      else: 
+        interp(then, env)
+      end
     | binop(s, l, r) => numV(1)
     | appC(f, a)=> numV(1)
     | lamC(a, b)=> numV(1)
@@ -68,5 +74,8 @@ where:
   interp(numC(1), [list: ]) is numV(1)
   interp(boolC(true), [list: ]) is boolV(true)
   interp(idC("x"), [list: bind("x", numV(1)), bind("y", numV(2))]) is numV(1)
-  interp(numC(2), [list: bind("x", numV(1)), bind("y", numV(2))]) is numV(1)
+  interp(numC(2), [list: bind("x", numV(1)), bind("y", numV(2))]) is numV(2)
+    interp(ifC(boolC(true), numC(5), numC(6)), [list: bind("x", numV(1)), bind("y", numV(2))]) is numV(5)
+  interp(ifC(boolC(false), numC(5), numC(6)), [list: bind("x", numV(1)), bind("y", numV(2))]) is numV(6)
+
 end
