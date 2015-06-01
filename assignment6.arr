@@ -91,6 +91,24 @@ where:
   num-mi(numV(4), boolV(true)) raises("invalid input")
 end
 
+
+fun evalArguments(args :: List, env :: List) -> List:
+  cases (List) args:
+    | empty => [list: ]
+    | link(f, r) =>
+      link(interp(f, env), evalArguments(r, env))
+  end
+
+where:
+  evalArguments([list: numC(1), numC(2)], [list: ]) is
+  [list: numV(1), numV(2)]
+  
+end
+
+
+
+
+
 fun interp(e :: ExprC, env :: List) -> Value:
   cases (ExprC) e:
     | numC(n) => numV(n)
