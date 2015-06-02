@@ -210,7 +210,14 @@ where:
   interp(binopC("/", numC(30), numC(6)), [list: ]) is numV(5)
   interp(binopC("/", numC(-12), numC(6)), [list: bind("a", numV(1)), bind("b", numV(2))]) is numV(-2)
   
-  interp(appC(lamC([list: "x", "y"], binopC("+", idC("x"), idC("y"))), [list: numC(5), numC(10)]), [list: ])
+  interp(appC(lamC([list: "x", "y"], binopC("+", idC("x"), idC("y"))), [list: numC(5), numC(10)]), [list: ]) is numV(15)
+  interp(appC(
+    lamC([list: "z"], 
+      binopC("+", 
+        appC(lamC([list: "x", "y"], 
+            binopC("+", idC("x"), idC("y"))), 
+          [list: numC(1), numC(2)]), idC("z"))), 
+    [list: numC(1)]), [list: ]) is numV(4)  
   
 end  
 
